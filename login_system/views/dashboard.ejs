@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Player</title>
+    <style>
+        body {
+            background-color: white;
+        }
+
+        .header,footer {
+            background-color: #0056b3;
+            color: white;
+            padding: 10px;
+        }
+        .header button{
+            margin-left:1400px;
+        }
+
+        .search-container {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .search-container input[type="text"] {
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .search-button {
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        .search-button:hover {
+            background-color: #003b80;
+        }
+
+        .song-container {
+            text-align: center;
+            margin-top: 20px;
+            padding-bottom: 400px;
+        }
+
+        .song-container h2 {
+            color: white;
+        }
+
+        #song-title {
+            color: white;
+        }
+
+        #audio-player {
+            background-color: #0056b3;
+            padding: 5px;
+        }
+
+        #audio-player:hover {
+            background-color: #003b80;
+        }
+
+        .logout-button {
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .logout-button:hover {
+            background-color: #003b80;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <center><h1>Harmony Wave</h1></center>
+        <center><p>Your Musical Oasis?</p></center>
+        <button class="logout-button" onclick="logout()">Logout</button>
+    </div>
+    <div class="search-container">
+        <input type="text" id="search-input" placeholder="Enter a song name">
+        <button id="search-button" class="search-button">Search</button>
+    </div>
+    <div class="song-container">
+        <h2>Now Playing:</h2>
+        <p id="song-title"></p>
+        <audio id="audio-player" controls></audio>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        const searchButton = document.getElementById('search-button');
+        const searchInput = document.getElementById('search-input');
+        const songTitle = document.getElementById('song-title');
+        const audioPlayer = document.getElementById('audio-player');
+
+        searchButton.addEventListener('click', async () => {
+            const query = searchInput.value.trim();
+            if (query !== '') {
+                try {
+                    const response = await axios.get('https://deezerdevs-deezer.p.rapidapi.com/search', {
+                        params: { q: query },
+                        headers: {
+                            'X-RapidAPI-Key': '40bb1e43ffmsh7f9a79f3411e1cep10feb5jsnddfd2be4aead',
+                            'X-RapidAPI-Host': 'deezerdevs-deezer.p.rapidapi.com'
+                        }
+                    });
+
+                    // Handle the response and update the UI with the song title and source
+                    const track = response.data.data[0]; // Assuming you want to play the first track in the search results
+                    if (track) {
+                        songTitle.textContent = track.title;
+                        audioPlayer.src = track.preview;
+                        audioPlayer.play();
+                    } else {
+                        songTitle.textContent = 'No results found';
+                        audioPlayer.src = '';
+                    }
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+        });
+
+        // Logout function
+        function logout() {
+            // Perform any necessary user data clearing here
+            // Redirect to the login page
+            window.location.href = 'route/login'; // Replace '/login' with your actual login page URL
+        }
+    </script>
+    <footer>
+        <div class="footer-content">
+            <div class="copyright">
+                &copy; 2023 HarmonyWave. All Rights Reserved.
+            </div>
+            <div class="contact-info">
+                <a href="mailto:contact@harmonywave.com">contact@harmonywave.com</a>
+                <span>|</span>
+                Phone: +1-123-456-7890
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
