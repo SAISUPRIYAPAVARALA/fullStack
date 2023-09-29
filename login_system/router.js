@@ -4,24 +4,27 @@ const firebase = require('firebase'); // Import Firebase library
 
 
 
+
 // Sign up user and add data to Firebase collection
 router.post('/signup', async (req, res) => {
     const { name, email, password } = req.body;
 
     try {
         // Create user in Firebase authentication
+        const hashedPassword = await bcrypt.hash(password, 10);
         const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
 
         // Add user data to Firebase collection
         await firebase.firestore().collection('users').doc(userCredential.user.uid).set({
             name,
             email,
-            password
+            hashedPassword
         });
 
         res.redirect('/route/login?message=signup'); // Redirect to login page with success message
     } catch (error) {
         console.error(error);
+        //alert("Error occured",error);
         res.render('signup', { error: "Signup failed. Please try again." }); // Display error on signup page
     }
 });
@@ -32,6 +35,7 @@ router.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
     try {
+        
         // Authenticate user with Firebase
         await firebase.auth().signInWithEmailAndPassword(email, password);
 
@@ -39,6 +43,7 @@ router.post('/login', async (req, res) => {
         res.redirect('/route/dashboard');
     } catch (error) {
         res.end("Invalid Username or Password");
+        
     }
 });
 
