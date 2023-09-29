@@ -2,17 +2,6 @@ var express = require("express");
 var router = express.Router();
 const firebase = require('firebase'); // Import Firebase library
 
-// Initialize Firebase with your config
-const firebaseConfig = {
-  apiKey: "AIzaSyDIU4f3e0i6uKKKJcQ3V3xV5DHdgxV6yqg",
-  authDomain: "fullstackcapstone-cd000.firebaseapp.com",
-  projectId: "fullstackcapstone-cd000",
-  storageBucket: "fullstackcapstone-cd000.appspot.com",
-  messagingSenderId: "603257894695",
-  appId: "1:603257894695:web:ba82af1f49461eb4a3db02",
-  measurementId: "G-QBXPWC42YK"
-};
-firebase.initializeApp(firebaseConfig);
 
 
 // Sign up user and add data to Firebase collection
